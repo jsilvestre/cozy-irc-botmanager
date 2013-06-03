@@ -375,8 +375,12 @@ window.require.register("views/app_view", function(exports, require, module) {
     };
 
     AppView.prototype.manageSocket = function() {
-      var _this = this;
-      this.socket = io.connect(window.location.origin);
+      var pathToSocketIO,
+        _this = this;
+      pathToSocketIO = "" + (window.location.pathname.substring(1)) + "socket.io";
+      this.socket = io.connect(window.location.origin, {
+        resource: pathToSocketIO
+      });
       this.socket.on('get-status', function(data) {
         _this.isBotRunning = data.isRunning;
         if (_this.isBotRunning) {
