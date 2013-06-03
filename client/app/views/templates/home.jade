@@ -1,0 +1,35 @@
+.container.well
+  form.form-horizontal
+    fieldset
+      legend Configuration
+      .control-group
+        label.control-label(for="serverName") Server address
+        .controls
+          input(type="text", id="serverName", placeholder="irc.freenode.net")
+      .control-group
+        label.control-label(for="username") Username
+        .controls
+          input(type="text", id="username", placeholder="cozy-irc-username")
+      .control-group
+        label.control-label(for="nickname") Nickname
+        .controls
+          input(type="text", id="nickname", placeholder="cozy-irc-nickname")
+      .control-group
+        label.control-label(for="password") Password (optional)
+        .controls
+          input(type="password", id="password", placeholder="mysecretpassword")
+      .control-group
+        label.control-label(for="channelName") Channel name
+        .controls
+          input(type="text", id="channelName", placeholder="#cozycloud")
+      .control-group
+        label.control-label(for="connectionMessage") Connection message
+        .controls
+          input.input-xxlarge(type="text", id="connectionMessage", placeholder="Hello everyone, I'm a bot !")
+      .control-group
+        label.control-label(for="helpMessage") Help message (!help)
+        .controls
+          input.input-xxlarge(type="text", id="helpMessage", placeholder="A help message.")
+
+      button.btn(id="save-config", type="button") Save
+      button.btn.disabled(id="action-bot", type="button") Start
