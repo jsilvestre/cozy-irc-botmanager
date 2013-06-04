@@ -4,6 +4,7 @@ module.exports = class BotManager extends events.EventEmitter
 
     constructor: (@config) ->
         @isRunning = false
+        @topic = ""
 
         nickname = @config.nickname
         server = @config.serverName
@@ -20,21 +21,32 @@ module.exports = class BotManager extends events.EventEmitter
 
         console.info "Bot is about to start..."
 
+        @client.on 'topic', (channel, topic, nick, message) =>
+            @topic = topic
+            @emit 'status-changed'
+
         @client.connect () =>
 
             # Identification
             @client.say 'NickServ', "identify #{@config.username} #{@config.password}"
 
             @client.join @config.channel, =>
-                @emit 'connected'
+                @emit 'status-changed'
                 @client.say 'ChanServ', "OP #{@config.channel} #{@config.nickname}"
                 @client.say @config.channel, @config.connectionMessage
 
-        @client.addListener "message##{@config.channel}", (from, message) ->
+        @client.addListener "message##{@config.channel}", (from, message) =>
             console.log from + ' => #yourchannel: ' + message
+            if /^!help/.test message
+                console.log "match"
+                if not @config.helpMessage?
+                    @config.helpMessage = "No help message configured."
+                @client.say from, @config.helpMessage
+            else
+                console.log "no match"
 
         @client.addListener "pm", (from, message) =>
-            @client.say from, "I am a bot, I won't be able to help you directly."
+            @client.say from, "I am a bot, a robot. I won't be able to help you directly."
 
         @client.addListener "error", (message) ->
             console.log message
@@ -42,6 +54,15 @@ module.exports = class BotManager extends events.EventEmitter
     stop: ->
         if @isRunning
             console.info "Bot is about to stop...."
-            @client.disconnect 'See you soon !', =>
+            @client.disconnect 'Goodbye, see you soon !', =>
                 @isRunning = false
-                @emit 'disconnected'
+                @emit 'status-changed'
+
+    setTopic: (topic) ->
+        if @isRunning
+            @client.send 'TOPIC', @config.channel, topic
+
+    manageMode: (mode, user) ->
+        if @isRunning
+            @client.send 'MODE', @config.channel, mode, user
+
