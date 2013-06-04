@@ -33,3 +33,18 @@
 
       button.btn(id="save-config", type="button") Save
       button.btn.disabled(id="action-bot", type="button") Start
+
+  form.form-horizontal
+    fieldset
+      legend Commands (requires you are channel OP)
+      .control-group
+        label.control-label(for="topic") Set topic
+        .controls
+          input.input-xxlarge(type="text", id="topic", placeholder="A channel topic")
+          button.btn(id="set-topic", type="button") Set
+      .control-group
+        label.control-label(for="topic") Set mode
+        .controls
+          input(type="text", id="mode", placeholder="+o")
+          input(type="text", id="user-target", placeholder="username")
+          button.btn(id="set-mode", type="button") Set

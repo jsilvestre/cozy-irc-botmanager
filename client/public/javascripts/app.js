@@ -352,7 +352,9 @@ window.require.register("views/app_view", function(exports, require, module) {
 
     AppView.prototype.events = {
       'click #save-config': 'onSubmit',
-      'click #action-bot': 'onActionBot'
+      'click #action-bot': 'onActionBot',
+      'click #set-topic': 'onSetTopic',
+      'click #set-mode': 'onSetMode'
     };
 
     AppView.prototype.initialize = function() {
@@ -369,7 +371,12 @@ window.require.register("views/app_view", function(exports, require, module) {
       this.channelField = this.$('#channelName');
       this.connectionMessage = this.$('#connectionMessage');
       this.helpMessage = this.$('#helpMessage');
+      this.topic = this.$('#topic');
+      this.mode = this.$('#mode');
+      this.userTarget = this.$('#user-target');
       this.actionButton = this.$('#action-bot');
+      this.setTopicButton = this.$('#set-topic');
+      this.setModeButton = this.$('#set-mode');
       this.model.fetch();
       return this.manageSocket();
     };
@@ -383,6 +390,7 @@ window.require.register("views/app_view", function(exports, require, module) {
       });
       this.socket.on('get-status', function(data) {
         _this.isBotRunning = data.isRunning;
+        _this.topic.val(data.topic);
         if (_this.isBotRunning) {
           return _this.actionButton.html('Stop');
         } else {
@@ -425,6 +433,21 @@ window.require.register("views/app_view", function(exports, require, module) {
       return this.helpMessage.val(this.model.get('helpMessage'));
     };
 
+    AppView.prototype.onSetTopic = function() {
+      return this.socket.emit('set-topic', {
+        topic: this.topic.val()
+      });
+    };
+
+    AppView.prototype.onSetMode = function() {
+      this.socket.emit('manage-mode', {
+        mode: this.mode.val(),
+        user: this.userTarget.val()
+      });
+      this.mode.val('');
+      return this.userTarget.val('');
+    };
+
     return AppView;
 
   })(BaseView);
@@ -436,7 +459,7 @@ window.require.register("views/templates/home", function(exports, require, modul
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="container well"><form class="form-horizontal"><fieldset><legend>Configuration</legend><div class="control-group"><label for="serverName" class="control-label">Server address</label><div class="controls"><input type="text" id="serverName" placeholder="irc.freenode.net"/></div></div><div class="control-group"><label for="username" class="control-label">Username</label><div class="controls"><input type="text" id="username" placeholder="cozy-irc-username"/></div></div><div class="control-group"><label for="nickname" class="control-label">Nickname</label><div class="controls"><input type="text" id="nickname" placeholder="cozy-irc-nickname"/></div></div><div class="control-group"><label for="password" class="control-label">Password (optional)</label><div class="controls"><input type="password" id="password" placeholder="mysecretpassword"/></div></div><div class="control-group"><label for="channelName" class="control-label">Channel name</label><div class="controls"><input type="text" id="channelName" placeholder="#cozycloud"/></div></div><div class="control-group"><label for="connectionMessage" class="control-label">Connection message</label><div class="controls"><input type="text" id="connectionMessage" placeholder="Hello everyone, I\'m a bot !" class="input-xxlarge"/></div></div><div class="control-group"><label for="helpMessage" class="control-label">Help message (!help)</label><div class="controls"><input type="text" id="helpMessage" placeholder="A help message." class="input-xxlarge"/></div></div><button id="save-config" type="button" class="btn">Save</button><button id="action-bot" type="button" class="btn disabled">Start</button></fieldset></form></div>');
+  buf.push('<div class="container well"><form class="form-horizontal"><fieldset><legend>Configuration</legend><div class="control-group"><label for="serverName" class="control-label">Server address</label><div class="controls"><input type="text" id="serverName" placeholder="irc.freenode.net"/></div></div><div class="control-group"><label for="username" class="control-label">Username</label><div class="controls"><input type="text" id="username" placeholder="cozy-irc-username"/></div></div><div class="control-group"><label for="nickname" class="control-label">Nickname</label><div class="controls"><input type="text" id="nickname" placeholder="cozy-irc-nickname"/></div></div><div class="control-group"><label for="password" class="control-label">Password (optional)</label><div class="controls"><input type="password" id="password" placeholder="mysecretpassword"/></div></div><div class="control-group"><label for="channelName" class="control-label">Channel name</label><div class="controls"><input type="text" id="channelName" placeholder="#cozycloud"/></div></div><div class="control-group"><label for="connectionMessage" class="control-label">Connection message</label><div class="controls"><input type="text" id="connectionMessage" placeholder="Hello everyone, I\'m a bot !" class="input-xxlarge"/></div></div><div class="control-group"><label for="helpMessage" class="control-label">Help message (!help)</label><div class="controls"><input type="text" id="helpMessage" placeholder="A help message." class="input-xxlarge"/></div></div><button id="save-config" type="button" class="btn">Save</button><button id="action-bot" type="button" class="btn disabled">Start</button></fieldset></form><form class="form-horizontal"><fieldset><legend>Commands (requires you are channel OP)</legend><div class="control-group"><label for="topic" class="control-label">Set topic</label><div class="controls"><input type="text" id="topic" placeholder="A channel topic" class="input-xxlarge"/><button id="set-topic" type="button" class="btn">Set</button></div></div><div class="control-group"><label for="topic" class="control-label">Set mode</label><div class="controls"><input type="text" id="mode" placeholder="+o"/><input type="text" id="user-target" placeholder="username"/><button id="set-mode" type="button" class="btn">Set</button></div></div></fieldset></form></div>');
   }
   return buf.join("");
   };

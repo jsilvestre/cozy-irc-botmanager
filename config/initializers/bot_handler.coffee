@@ -31,8 +31,9 @@ module.exports = (compound) ->
                 socket.on 'ask-stop', ->
                     bot.stop()
 
-                socket.on 'set-topic', ->
+                socket.on 'set-topic', (data) ->
                     bot.setTopic data.topic
 
-                socket.on 'manage-mode', ->
+                socket.on 'manage-mode', (data) ->
+                    console.log data
                     bot.manageMode data.mode, data.user

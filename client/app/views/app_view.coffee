@@ -9,6 +9,8 @@ module.exports = class AppView extends BaseView
     events:
         'click #save-config': 'onSubmit'
         'click #action-bot': 'onActionBot'
+        'click #set-topic': 'onSetTopic'
+        'click #set-mode': 'onSetMode'
 
     initialize: ->
         @model = new Configuration()
@@ -17,7 +19,6 @@ module.exports = class AppView extends BaseView
         @isBotRunning = false
 
     afterRender: ->
-
         @serverNameField = @$('#serverName')
         @usernameField = @$('#username')
         @nicknameField = @$('#nickname')
@@ -25,19 +26,27 @@ module.exports = class AppView extends BaseView
         @channelField = @$('#channelName')
         @connectionMessage = @$('#connectionMessage')
         @helpMessage = @$('#helpMessage')
+
+        @topic = @$('#topic')
+        @mode = @$('#mode')
+        @userTarget = @$('#user-target')
+
         @actionButton = @$('#action-bot')
+        @setTopicButton = @$('#set-topic')
+        @setModeButton = @$('#set-mode')
 
         @model.fetch()
         @manageSocket()
 
     manageSocket: ->
-
         pathToSocketIO = "#{window.location.pathname.substring(1)}socket.io"
         @socket = io.connect window.location.origin,
                 resource: pathToSocketIO
 
         @socket.on 'get-status', (data) =>
             @isBotRunning = data.isRunning
+
+            @topic.val data.topic
 
             if @isBotRunning
                 @actionButton.html 'Stop'
@@ -73,3 +82,14 @@ module.exports = class AppView extends BaseView
         @channelField.val @model.get 'channel'
         @connectionMessage.val @model.get 'connectionMessage'
         @helpMessage.val @model.get 'helpMessage'
+
+    onSetTopic: ->
+        @socket.emit 'set-topic', topic: @topic.val()
+
+    onSetMode: ->
+        @socket.emit 'manage-mode',
+            mode: @mode.val()
+            user: @userTarget.val()
+
+        @mode.val ''
+        @userTarget.val ''

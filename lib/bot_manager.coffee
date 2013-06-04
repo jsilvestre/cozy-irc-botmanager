@@ -35,15 +35,12 @@ module.exports = class BotManager extends events.EventEmitter
                 @client.say 'ChanServ', "OP #{@config.channel} #{@config.nickname}"
                 @client.say @config.channel, @config.connectionMessage
 
-        @client.addListener "message##{@config.channel}", (from, message) =>
-            console.log from + ' => #yourchannel: ' + message
+        @client.addListener "message", (from, to, message) =>
+            console.log from + " => ##{to}: " + message
             if /^!help/.test message
-                console.log "match"
                 if not @config.helpMessage?
                     @config.helpMessage = "No help message configured."
                 @client.say from, @config.helpMessage
-            else
-                console.log "no match"
 
         @client.addListener "pm", (from, message) =>
             @client.say from, "I am a bot, a robot. I won't be able to help you directly."
