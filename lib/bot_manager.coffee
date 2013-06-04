@@ -41,6 +41,8 @@ module.exports = class BotManager extends events.EventEmitter
                 if not @config.helpMessage?
                     @config.helpMessage = "No help message configured."
                 @client.say from, @config.helpMessage
+            else if new RegExp(@config.nickname).test message
+                @client.say from, "I am a bot, a robot. I won't be able to help you directly."
 
         @client.addListener "pm", (from, message) =>
             @client.say from, "I am a bot, a robot. I won't be able to help you directly."
