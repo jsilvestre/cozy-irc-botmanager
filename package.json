@@ -23,7 +23,7 @@
     "jugglingdb": "= 0.2.0-23",
     "jugglingdb-cozy-adapter": "0.3.1",
     "irc": "~0.3.6",
-    "socket.io": "~0.9.14"
+    "cozy-realtime-adapter": "~0.10.0"
   },
   "devDependencies": {
     "should": "= 1.2.0",

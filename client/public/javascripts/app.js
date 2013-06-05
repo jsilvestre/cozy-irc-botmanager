@@ -371,6 +371,7 @@ window.require.register("views/app_view", function(exports, require, module) {
       this.channelField = this.$('#channelName');
       this.connectionMessage = this.$('#connectionMessage');
       this.helpMessage = this.$('#helpMessage');
+      this.botStatus = this.$('#bot-status');
       this.topic = this.$('#topic');
       this.mode = this.$('#mode');
       this.userTarget = this.$('#user-target');
@@ -392,8 +393,14 @@ window.require.register("views/app_view", function(exports, require, module) {
         _this.isBotRunning = data.isRunning;
         _this.topic.val(data.topic);
         if (_this.isBotRunning) {
+          _this.botStatus.addClass('bot-started');
+          _this.botStatus.removeClass('bot-stopped');
+          _this.botStatus.html('running');
           return _this.actionButton.html('Stop');
         } else {
+          _this.botStatus.addClass('bot-stopped');
+          _this.botStatus.removeClass('bot-started');
+          _this.botStatus.html('stopped');
           return _this.actionButton.html('Start');
         }
       });
@@ -459,7 +466,7 @@ window.require.register("views/templates/home", function(exports, require, modul
   var buf = [];
   with (locals || {}) {
   var interp;
-  buf.push('<div class="container well"><form class="form-horizontal"><fieldset><legend>Configuration</legend><div class="control-group"><label for="serverName" class="control-label">Server address</label><div class="controls"><input type="text" id="serverName" placeholder="irc.freenode.net"/></div></div><div class="control-group"><label for="username" class="control-label">Username</label><div class="controls"><input type="text" id="username" placeholder="cozy-irc-username"/></div></div><div class="control-group"><label for="nickname" class="control-label">Nickname</label><div class="controls"><input type="text" id="nickname" placeholder="cozy-irc-nickname"/></div></div><div class="control-group"><label for="password" class="control-label">Password (optional)</label><div class="controls"><input type="password" id="password" placeholder="mysecretpassword"/></div></div><div class="control-group"><label for="channelName" class="control-label">Channel name</label><div class="controls"><input type="text" id="channelName" placeholder="#cozycloud"/></div></div><div class="control-group"><label for="connectionMessage" class="control-label">Connection message</label><div class="controls"><input type="text" id="connectionMessage" placeholder="Hello everyone, I\'m a bot !" class="input-xxlarge"/></div></div><div class="control-group"><label for="helpMessage" class="control-label">Help message (!help)</label><div class="controls"><input type="text" id="helpMessage" placeholder="A help message." class="input-xxlarge"/></div></div><button id="save-config" type="button" class="btn">Save</button><button id="action-bot" type="button" class="btn disabled">Start</button></fieldset></form><form class="form-horizontal"><fieldset><legend>Commands (requires you are channel OP)</legend><div class="control-group"><label for="topic" class="control-label">Set topic</label><div class="controls"><input type="text" id="topic" placeholder="A channel topic" class="input-xxlarge"/><button id="set-topic" type="button" class="btn">Set</button></div></div><div class="control-group"><label for="topic" class="control-label">Set mode</label><div class="controls"><input type="text" id="mode" placeholder="+o"/><input type="text" id="user-target" placeholder="username"/><button id="set-mode" type="button" class="btn">Set</button></div></div></fieldset></form></div>');
+  buf.push('<div class="container well"><form class="form-horizontal"><fieldset><legend>Configuration</legend><div class="control-group"><label for="serverName" class="control-label">Server address</label><div class="controls"><input type="text" id="serverName" placeholder="irc.freenode.net"/></div></div><div class="control-group"><label for="username" class="control-label">Username</label><div class="controls"><input type="text" id="username" placeholder="cozy-irc-username"/></div></div><div class="control-group"><label for="nickname" class="control-label">Nickname</label><div class="controls"><input type="text" id="nickname" placeholder="cozy-irc-nickname"/></div></div><div class="control-group"><label for="password" class="control-label">Password (optional)</label><div class="controls"><input type="password" id="password" placeholder="mysecretpassword"/></div></div><div class="control-group"><label for="channelName" class="control-label">Channel name</label><div class="controls"><input type="text" id="channelName" placeholder="#cozycloud"/></div></div><div class="control-group"><label for="connectionMessage" class="control-label">Connection message</label><div class="controls"><input type="text" id="connectionMessage" placeholder="Hello everyone, I\'m a bot !" class="input-xxlarge"/></div></div><div class="control-group"><label for="helpMessage" class="control-label">Help message (!help)</label><div class="controls"><input type="text" id="helpMessage" placeholder="A help message." class="input-xxlarge"/></div></div><button id="save-config" type="button" class="btn">Save</button></fieldset><fieldset><legend>Commands (requires you are channel OP)</legend><div class="control-group"><label for="topic" class="control-label">Bot status</label><div class="controls"><span id="bot-status">stopped</span><button id="action-bot" type="button" class="btn">Start</button></div></div><div class="control-group"><label for="topic" class="control-label">Set topic</label><div class="controls"><input type="text" id="topic" placeholder="A channel topic" class="input-xxlarge"/><button id="set-topic" type="button" class="btn">Set</button></div></div><div class="control-group"><label for="topic" class="control-label">Set mode</label><div class="controls"><input type="text" id="mode" placeholder="+o"/><input type="text" id="user-target" placeholder="username"/><button id="set-mode" type="button" class="btn">Set</button></div></div></fieldset></form></div>');
   }
   return buf.join("");
   };

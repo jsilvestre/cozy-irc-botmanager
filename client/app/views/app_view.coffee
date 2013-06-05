@@ -27,6 +27,7 @@ module.exports = class AppView extends BaseView
         @connectionMessage = @$('#connectionMessage')
         @helpMessage = @$('#helpMessage')
 
+        @botStatus = @$('#bot-status')
         @topic = @$('#topic')
         @mode = @$('#mode')
         @userTarget = @$('#user-target')
@@ -45,12 +46,17 @@ module.exports = class AppView extends BaseView
 
         @socket.on 'get-status', (data) =>
             @isBotRunning = data.isRunning
-
             @topic.val data.topic
 
             if @isBotRunning
+                @botStatus.addClass 'bot-started'
+                @botStatus.removeClass 'bot-stopped'
+                @botStatus.html 'running'
                 @actionButton.html 'Stop'
             else
+                @botStatus.addClass 'bot-stopped'
+                @botStatus.removeClass 'bot-started'
+                @botStatus.html 'stopped'
                 @actionButton.html 'Start'
 
         @socket.emit 'ask-status', {}

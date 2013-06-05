@@ -14,10 +14,12 @@ module.exports = class BotManager extends events.EventEmitter
 
         @client = new irc.Client server, nickname, opts
 
+        @client.addListener "error", (message) ->
+            console.log message
+
     start: ->
 
         return false if @isRunning
-        @isRunning = true
 
         console.info "Bot is about to start..."
 
@@ -27,16 +29,20 @@ module.exports = class BotManager extends events.EventEmitter
 
         @client.connect () =>
 
+            console.log "bot connected to the server"
+            @isRunning = true
+            @emit 'status-changed'
+
             # Identification
-            @client.say 'NickServ', "identify #{@config.username} #{@config.password}"
+            if @config.username? and @config.password?
+                @client.say 'NickServ', "identify #{@config.username} #{@config.password}"
 
             @client.join @config.channel, =>
-                @emit 'status-changed'
                 @client.say 'ChanServ', "OP #{@config.channel} #{@config.nickname}"
                 @client.say @config.channel, @config.connectionMessage
 
         @client.addListener "message", (from, to, message) =>
-            console.log from + " => ##{to}: " + message
+            console.log from + " => #{to}: " + message
             if /^!help/.test message
                 if not @config.helpMessage?
                     @config.helpMessage = "No help message configured."
@@ -47,15 +53,16 @@ module.exports = class BotManager extends events.EventEmitter
         @client.addListener "pm", (from, message) =>
             @client.say from, "I am a bot, a robot. I won't be able to help you directly."
 
-        @client.addListener "error", (message) ->
-            console.log message
 
-    stop: ->
+    stop: (callback) ->
         if @isRunning
             console.info "Bot is about to stop...."
             @client.disconnect 'Goodbye, see you soon !', =>
                 @isRunning = false
                 @emit 'status-changed'
+                callback() if callback?
+        else
+            @emit 'status-changed'
 
     setTopic: (topic) ->
         if @isRunning

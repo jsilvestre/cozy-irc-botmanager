@@ -30,13 +30,14 @@
         label.control-label(for="helpMessage") Help message (!help)
         .controls
           input.input-xxlarge(type="text", id="helpMessage", placeholder="A help message.")
-
       button.btn(id="save-config", type="button") Save
-      button.btn.disabled(id="action-bot", type="button") Start
-
-  form.form-horizontal
     fieldset
       legend Commands (requires you are channel OP)
+      .control-group
+        label.control-label(for="topic") Bot status
+        .controls
+          span#bot-status stopped
+          button.btn(id="action-bot", type="button") Start
       .control-group
         label.control-label(for="topic") Set topic
         .controls
