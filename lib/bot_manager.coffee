@@ -63,6 +63,7 @@ module.exports = class BotManager extends events.EventEmitter
                 callback() if callback?
         else
             @emit 'status-changed'
+            callback() if callback?
 
     setTopic: (topic) ->
         if @isRunning
