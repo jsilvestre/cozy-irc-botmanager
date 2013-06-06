@@ -1,9 +1,10 @@
 # Description
 
-Cozy IRC BotManager manages a simple IRC Bot from your Cozy.
-Dead simple!
+Cozy IRC BotManager manages a simple IRC Bot from your Cozy. Dead simple!
+
 You can also use it directly from any NodeJS server by simply changing the driver of the ORM we use: JugglingDB.
 In config/database.json just change 'cozy-adapter' with a JugglingDB driver suited to your database.
+
 See https://github.com/1602/jugglingdb for all the drivers available!
 Since Cozy provides authentification it is not handled by the application. You will have you handle it by yourself if you use the bot manager without Cozy.
 
