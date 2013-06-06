@@ -59,8 +59,6 @@ module.exports = class AppView extends BaseView
                 @botStatus.html 'stopped'
                 @actionButton.html 'Start'
 
-        @socket.emit 'ask-status', {}
-
     onActionBot: ->
         if @isBotRunning
             @socket.emit 'ask-stop', {}
